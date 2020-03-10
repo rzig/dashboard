@@ -2,10 +2,11 @@ import React from 'react';
 import './App.css';
 import { FiHome, FiCpu, FiUsers } from 'react-icons/fi';
 import Graph from './components/Graph';
+import Label from './components/Label';
 
 function App() {
   return (
-    <div className="container grid grid-cols-8 h-screen bg-gray-200 w-screen max-w-none">
+    <div className="container grid grid-cols-8 h-screen bg-gray-200 w-screen max-w-none overflow-x-hidden">
       <aside className="bg-white col-span-1 p-5 flex flex-col">
         <h1 className="text-2xl border-b pb-3 border-gray-400 h-12">Dashboard</h1>
         <nav>
@@ -29,55 +30,55 @@ function App() {
         </div>
         <div className="m-5 flex items-center justify-between">
           <div className="rounded bg-white mr-3 shadow p-2 flex-initial w-full">
-            <label className="text-xs font-bold text-gray-600">Temperature</label>
+            <Label>Temperature</Label>
             <p className="text-5xl">59°</p>
           </div>
           <div className="rounded bg-white mx-3 shadow p-2 flex-initial w-full">
-            <label className="text-xs font-bold text-gray-600">Humidity</label>
+            <Label>Humidity</Label>
             <p className="text-5xl">80%</p>
           </div>
           <div className="rounded bg-white mx-3 shadow p-2 flex-initial w-full">
-            <label className="text-xs font-bold text-gray-600">Wind</label>
+            <Label>Wind</Label>
             <p className="text-5xl">15mph</p>
           </div>
           <div className="rounded bg-white mx-3 shadow p-2 flex-initial w-full">
-            <label className="text-xs font-bold text-gray-600">Week High</label>
+            <Label>Week High</Label>
             <p className="text-5xl">65°</p>
           </div>
           <div className="rounded bg-white mx-3 shadow p-2 flex-initial w-full">
-            <label className="text-xs font-bold text-gray-600">Week Low</label>
+            <Label>Week Low</Label>
             <p className="text-5xl">17°</p>
           </div>
           <div className="rounded bg-white ml-3 shadow p-2 flex-initial w-full">
-            <label className="text-xs font-bold text-gray-600">Sensors Operational</label>
+            <Label>Sensors Operational</Label>
             <p className="text-5xl">100%</p>
           </div>
         </div>
         <div className="m-5 flex items-center justify-between">
           <div className="rounded bg-white mr-3 shadow p-2 flex-initial w-full overflow-hidden">
-            <label className="text-xs font-bold text-gray-600">Temperature</label>
+            <Label>Temperature</Label>
             <Graph data={{"3/6": 50, "3/7": 20, "3/8": 40}} color="#3182ce"/>
           </div>
           <div className="rounded bg-white mx-3 shadow p-2 flex-initial w-full overflow-hidden">
-            <label className="text-xs font-bold text-gray-600">Humidity</label>
+            <Label>Humidity</Label>
             <Graph data={{"3/6": 40, "3/7": 45, "3/8": 40}} color="#3182ce"/>
           </div>
           <div className="rounded bg-white ml-3 shadow p-2 flex-initial w-full overflow-hidden">
-            <label className="text-xs font-bold text-gray-600">Precipitation</label>
+            <Label>Precipitation</Label>
             <Graph data={{"3/6": 20, "3/7": 50, "3/8": 10}} color="#3182ce"/>
           </div>
         </div>
         <div className="m-5 flex items-center justify-between">
           <div className="rounded bg-white mr-3 shadow p-2 flex-initial w-full overflow-hidden">
-            <label className="text-xs font-bold text-gray-600">Temperature</label>
+            <Label>Temperature</Label>
             <Graph data={{"3/6": 50, "3/7": 20, "3/8": 40}} color="#3182ce"/>
           </div>
           <div className="rounded bg-white mx-3 shadow p-2 flex-initial w-full overflow-hidden">
-            <label className="text-xs font-bold text-gray-600">Humidity</label>
+            <Label>Humidity</Label>
             <Graph data={{"3/6": 40, "3/7": 45, "3/8": 40}} color="#3182ce"/>
           </div>
           <div className="rounded bg-white ml-3 shadow p-2 flex-initial w-full overflow-hidden">
-            <label className="text-xs font-bold text-gray-600">Precipitation</label>
+            <Label>Precipitation</Label>
             <Graph data={{"3/6": 20, "3/7": 50, "3/8": 10}} color="#3182ce"/>
           </div>
         </div>
