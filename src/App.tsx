@@ -45,7 +45,7 @@ function NavLink({name, to, icon}: NavLinkProps) {
 function App() {
   return (
     
-      <div className="container grid grid-cols-8 h-screen bg-gray-200 w-screen max-w-none overflow-x-hidden">
+      <div className="container grid grid-cols-8 h-screen bg-gray-200 w-screen max-w-none overflow-x-hidden w-screen">
         <aside className="bg-white col-span-1 p-5 flex flex-col">
           <h1 className="text-2xl border-b pb-3 border-gray-400 h-12">Dashboard</h1>
           <nav>

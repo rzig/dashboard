@@ -67,7 +67,7 @@ function Sensors({}: Props) {
     const [editorUUID, setEditorUUID] = useState<string>("");
     
     return (
-        <div className="h-screen overflow-hidden pb-5">
+        <div className="h-screen overflow-x-hidden pb-5">
             <div className="border-b border-gray-400 m-5 h-12 flex items-center justify-between">
                 <h1 className="text-2xl mb-4">Columbus, OH</h1>
             </div>
