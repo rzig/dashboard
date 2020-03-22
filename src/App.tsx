@@ -6,12 +6,19 @@ import Label from './components/Label';
 import Home from './pages/Home';
 import { IconType } from 'react-icons/lib/cjs';
 import { Router, Link, Match } from '@reach/router';
+import Sensors from './pages/Sensors';
+import firebase from "firebase";
+import { firebaseConfig } from './config';
+require("firebase/firestore");
+
 
 type NavLinkProps = {
   name: string,
   to: string,
   icon: IconType
 }
+
+firebase.initializeApp(firebaseConfig);
 
 function NavLink({name, to, icon}: NavLinkProps) {
   const [current, setCurrent] = useState<boolean>(false);
@@ -37,23 +44,25 @@ function NavLink({name, to, icon}: NavLinkProps) {
 
 function App() {
   return (
-    <div className="container grid grid-cols-8 h-screen bg-gray-200 w-screen max-w-none overflow-x-hidden">
-      <aside className="bg-white col-span-1 p-5 flex flex-col">
-        <h1 className="text-2xl border-b pb-3 border-gray-400 h-12">Dashboard</h1>
-        <nav>
-          <ul className="pt-3">
-            <NavLink name="Home" to="/" icon={FiHome}/>
-            <NavLink name="Sensors" to="/sensors" icon={FiCpu}/>
-            <NavLink name="Users" to="/users" icon={FiUsers}/>
-          </ul>
-        </nav>
-      </aside>
-      <div className="col-span-7">
-        <Router>
-          <Home path="/"/>
-        </Router>
+    
+      <div className="container grid grid-cols-8 h-screen bg-gray-200 w-screen max-w-none overflow-x-hidden">
+        <aside className="bg-white col-span-1 p-5 flex flex-col">
+          <h1 className="text-2xl border-b pb-3 border-gray-400 h-12">Dashboard</h1>
+          <nav>
+            <ul className="pt-3">
+              <NavLink name="Home" to="/" icon={FiHome}/>
+              <NavLink name="Sensors" to="/sensors" icon={FiCpu}/>
+              <NavLink name="Users" to="/users" icon={FiUsers}/>
+            </ul>
+          </nav>
+        </aside>
+        <div className="col-span-7">
+          <Router>
+              <Home path="/"/>
+              <Sensors path="/sensors"/>
+          </Router>
+        </div>
       </div>
-    </div>
   );
 }
 
