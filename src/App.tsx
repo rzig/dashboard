@@ -9,7 +9,6 @@ import { Router, Link, Match } from '@reach/router';
 import Sensors from './pages/Sensors';
 import firebase from "firebase";
 import { firebaseConfig } from './config';
-import Login from './pages/Login';
 import { User } from './types/User';
 require("firebase/firestore");
 require("firebase/auth");
