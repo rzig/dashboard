@@ -153,13 +153,13 @@ function Users({}: Props) {
                                 </th>
                             </thead>
                             <tbody>
-                                {usersState.users.map(user => (
-                                    <tr>
-                                        <td className="py-3 pl-1">
+                                {usersState.users.map((user, index) => (
+                                    <tr className={index % 2 == 1 ? "bg-gray-400" : ""}>
+                                        <td className="pt-3 pl-1 pr-5">
                                             <input
                                                 value={user.email}
                                                 type="email"
-                                                className="pb-2 pb-2 focus:border-black focus:border-b-4 focus:border-8 border-b border-white border-b"
+                                                className="pb-1 mb-1 focus:border-black focus:border-b-4 focus:border-8 border-b border-transparent border-b w-full bg-transparent"
                                                 onChange={(e) => {usersDispatch({type: "UPDATE_USER", uid: user.uid, newValues: {email: e.target.value}})}}
                                             />
                                         </td>
