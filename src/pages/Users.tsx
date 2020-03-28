@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import firebase from "firebase";
 import { User } from '../types/User';
+import executeCloudFunction from '../helpers/executeCloudFunction';
 require("firebase/auth");
 
 type UsersReducerState = {
@@ -16,6 +17,14 @@ function usersReducer(state: UsersReducerState, action: Action): UsersReducerSta
             return {users: action.users}
         }
         case 'ADD_USER': {
+            updates.push({
+                type: "CREATE",
+                user: {
+                    email: action.user.email,
+                    password: action.user.password,
+                    admin: action.user.admin
+                }
+            })
             return {users: [...state.users, action.user]}
         }
         case 'UPDATE_USER': {
@@ -25,11 +34,23 @@ function usersReducer(state: UsersReducerState, action: Action): UsersReducerSta
                     newUsers[i] = Object.assign({}, newUsers[i], action.newValues)
                 }
             }
+            updates.push({
+                type: "UPDATE",
+                uid: action.uid,
+                newValues: {
+                    ...action.newValues,
+                    isAdmin: action.newValues.admin
+                }
+            });
             return {users: newUsers}
         }
         case 'DELETE_USER': {
             const newUsers = state.users.filter(user => {
                 return user.uid != action.uid;
+            });
+            updates.push({
+                type: "DELETE",
+                uid: action.uid
             });
             return {users: newUsers};
         }
@@ -39,6 +60,14 @@ function usersReducer(state: UsersReducerState, action: Action): UsersReducerSta
     }
 }
 
+type Update = {
+    type: "UPDATE"|"CREATE"|"DELETE",
+    [key:string]: any
+}
+
+// it's quick but it works lmao
+const updates: Array<Update> = [];
+
 type Props = {
     path: string
 }
@@ -46,18 +75,13 @@ function Users({}: Props) {
     const [usersState, usersDispatch] = useReducer(usersReducer, {users: []});
     const [usersLoaded, setUsersLoaded] = useState<boolean>(false);
     const [usersError, setUsersError] = useState<boolean>(false);
+    const [idToken, setIdToken] = useState<string>("");
+
     useEffect(() => {
-        firebase.auth().currentUser?.getIdToken().then(idToken => {
-            fetch("https://us-central1-cbus-hack-2020.cloudfunctions.net/listUsers", {
-                method: "POST",
-                body: '{"token": "' + idToken + '"}',
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(result => {
-                return result.json()
-            }).then(json => {
-                usersDispatch({type: 'SET_USERS', users: json.users})
+        firebase.auth().currentUser?.getIdToken().then(token => {
+            setIdToken(token)
+            executeCloudFunction<any>("listUsers", {token: token}).then(res => {
+                usersDispatch({type: "SET_USERS", users: res.users});
                 setUsersLoaded(true);
             }).catch(err => {
                 setUsersError(true);
@@ -65,6 +89,46 @@ function Users({}: Props) {
             });
         });
     }, []);
+
+    const flushUpdates = () => {
+        if(idToken == "") { return }
+        while(updates.length > 0) {
+            const update = updates.shift();
+            switch(update?.type) {
+                case "CREATE": {
+                    executeCloudFunction("createUser", {
+                        token: idToken,
+                        user: update.user
+                    })
+                    break;
+                }
+                case "UPDATE": {
+                    executeCloudFunction("updateUser", {
+                        token: idToken,
+                        uid: update.uid,
+                        newValues: update.newValues
+                    });
+                    break;
+                }
+                case "DELETE": {
+                    executeCloudFunction("deleteUser", {
+                        token: idToken,
+                        uid: update.uid
+                    });
+                    break;
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
+        const interval = setInterval(flushUpdates, 5000);
+        return () => {
+            clearInterval(interval);
+            flushUpdates();
+        }
+    })
+
     return (
         <div className="h-screen overflow-x-hidden">
             <div className="border-b border-gray-400 m-5 h-12 flex items-center justify-between">
