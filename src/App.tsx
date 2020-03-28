@@ -10,6 +10,7 @@ import Sensors from './pages/Sensors';
 import firebase from "firebase";
 import { firebaseConfig } from './config';
 import { User } from './types/User';
+import Users from './pages/Users';
 require("firebase/firestore");
 require("firebase/auth");
 
@@ -84,6 +85,7 @@ function App() {
           <Router>
               <Home path="/"/>
               <Sensors path="/sensors"/>
+              <Users path="/users"/>
           </Router>
         </div>
       </div>
