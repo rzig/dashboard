@@ -3,6 +3,7 @@ import firebase from "firebase";
 import { User } from '../types/User';
 import executeCloudFunction from '../helpers/executeCloudFunction';
 import Modal from 'react-modal';
+import { FiDelete, FiTrash2, FiTrash } from 'react-icons/fi';
 require("firebase/auth");
 
 type UsersReducerState = {
@@ -165,6 +166,9 @@ function Users({}: Props) {
                                     <th>
                                         <td>Last login date</td>
                                     </th>
+                                    <th>
+                                        <td>Delete</td>
+                                    </th>
                                 </thead>
                                 <tbody>
                                     {usersState.users.map((user, index) => (
@@ -186,6 +190,13 @@ function Users({}: Props) {
                                                 />
                                             </td>
                                             <td>{user.lastLogin}</td>
+                                            <td className="cursor-pointer">
+                                                <FiTrash 
+                                                    size={20}
+                                                    onClick={() => usersDispatch({type: "DELETE_USER", uid: user.uid})}
+                                                    className="ml-3"
+                                                />
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
