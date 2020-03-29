@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { FiHome, FiCpu, FiUsers } from 'react-icons/fi';
+import { FiHome, FiCpu, FiUsers, FiArrowRightCircle } from 'react-icons/fi';
 import Graph from './components/Graph';
 import Label from './components/Label';
 import Home from './pages/Home';
 import { IconType } from 'react-icons/lib/cjs';
-import { Router, Link, Match } from '@reach/router';
+import { Router, Link, Match, useNavigate } from '@reach/router';
 import Sensors from './pages/Sensors';
 import firebase from "firebase";
 import { firebaseConfig } from './config';
@@ -13,7 +13,6 @@ import { User } from './types/User';
 import Users from './pages/Users';
 require("firebase/firestore");
 require("firebase/auth");
-
 
 type NavLinkProps = {
   name: string,
@@ -45,6 +44,24 @@ function NavLink({name, to, icon}: NavLinkProps) {
   )
 }
 
+type LogOutHandlerProps = {
+  path: string,
+  onLogOut?: () => void
+}
+function LogOutHandler({onLogOut}: LogOutHandlerProps) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Log the user out when they go to this page
+    firebase.auth().signOut().then(() => {
+      navigate("/");
+      if(onLogOut) { onLogOut() }
+    })
+  }, []);
+  return (
+    <span className="text-gray-600 text-3xl">Logging out...</span>
+  )
+};
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [email, setEmail] = useState<string|undefined>();
@@ -57,6 +74,8 @@ function App() {
       const uid = user.user?.uid;
       firebase.firestore().collection("administrators").doc(uid).get().then(document => {
         if(document.exists) {
+          setEmail(undefined);
+          setPassword(undefined);
           setIsAuthenticated(true);
         } else {
           setIncorrect(true);
@@ -78,6 +97,7 @@ function App() {
               <NavLink name="Home" to="/" icon={FiHome}/>
               <NavLink name="Sensors" to="/sensors" icon={FiCpu}/>
               <NavLink name="Users" to="/users" icon={FiUsers}/>
+              <NavLink name="Log Out" to="/logout" icon={FiArrowRightCircle}/>
             </ul>
           </nav>
         </aside>
@@ -86,6 +106,7 @@ function App() {
               <Home path="/"/>
               <Sensors path="/sensors"/>
               <Users path="/users"/>
+              <LogOutHandler path="/logout" onLogOut={() => {setIsAuthenticated(false)}}/>
           </Router>
         </div>
       </div>
