@@ -87,6 +87,16 @@ function App() {
     })
   }
 
+  useEffect(() => {
+    const handler = firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    })
+  }, [])
+
   if(isAuthenticated) {
     return (
       <div className="container grid grid-cols-8 h-screen bg-gray-200 w-screen max-w-none overflow-x-hidden w-screen">
